@@ -1,0 +1,34 @@
+{%extends 'base.html'%}
+{%block title%}New User{%endblock%}
+{%block content%}
+{%with eMessages = get_flashed_messages()%}
+{%if eMessages %}
+<div class="container">
+    <ul>
+        {%for eMessage in eMessages%}
+        <li style="list-style-type: none;" class="alert alert-danger">{{eMessage}}</li>
+        {%endfor%}
+    </ul>
+</div>
+{%endif%}
+{%endwith%}
+<div class="container">
+    <h1>Create a user</h1>
+    <form method="POST" action="/users/new">
+        <div class="mb-3">
+            <label for="firstNameInput" class="form-label">First Name</label>
+            <input type="text" class="form-control" name="firstNameInput" id="firstNameInput">
+        </div>
+        <div class="mb-3">
+            <label for="lastNameInput" class="form-label">Last Name</label>
+            <input type="text" class="form-control" name="lastNameInput" id="lastNameInput">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="imgUrl">Image Url</label>
+            <input type="text" name="imgUrl" class="form-control" id="imgUrl">
+
+        </div>
+        <button type="submit" class="btn btn-primary">Add User</button>
+    </form>
+</div>
+{%endblock%}
