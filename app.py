@@ -1,6 +1,7 @@
 from flask import Flask,render_template,redirect,request,flash
 from models import connect_db,User
 from flask_debugtoolbar import DebugToolbarExtension
+from res.Tools import empty_to_default
 
 app = Flask(__name__)
 
@@ -27,8 +28,8 @@ def users_page():
 @app.route('/users/new',methods=['POST','GET'])
 def new_user_page():
     if request.method=='POST':
-        first_name = request.form['firstNameInput'] if request.form['firstNameInput'] != "" else None
-        last_name = request.form['lastNameInput'] if request.form['lastNameInput'] != "" else None
+        first_name = empty_to_default(request.form['firstNameInput'],None)
+        last_name = empty_to_default(request.form['lastNameInput'],None)
         try:
             User.update_table(user=User(first_name= first_name,last_name= last_name))
         except:
@@ -47,18 +48,14 @@ def edit_user_page(user_id):
     
     user = User.query.get(user_id)
     if request.method=='POST':
-        first_name = request.form['firstNameInput'] if request.form['firstNameInput'] != "" else None
-        last_name = request.form['lastNameInput'] if request.form['lastNameInput'] != "" else None
-        image_url = request.form['imgUrl'] if request.form['imgUrl'] != "" else user.image_url
-
         try:
-            user.first_name = first_name
-            user.last_name = last_name
-            user.image_url = image_url
+            user.first_name = empty_to_default(request.form['firstNameInput'],None)
+            user.last_name = empty_to_default(request.form['lastNameInput'],None)
+            user.image_url = empty_to_default(request.form['imgUrl'],user.image_url)
             User.update_table(user=user)
         except:
             flash('Error Editing User, Please Try Again')
-        return redirect(f'/users/{user_id}')
+        return redirect(f'/users/{user_id}/edit')
     if request.method=='GET':
         return render_template('edit_user.html',user=user)
 
@@ -66,3 +63,11 @@ def edit_user_page(user_id):
 def delete_user_page(user_id):
     User.delete_at_id(user_id)
     return redirect('/')
+
+@app.route('/users/<user_id>/posts/new',methods=['GET','POST'])
+def new_post_page(user_id):
+    if request.method=='POST':
+        return None
+    if request.method=='GET':
+        return render_template('new_post.html')
+

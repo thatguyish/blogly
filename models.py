@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 
-from sqlalchemy.orm import backref
 db = SQLAlchemy()
 
 def connect_db(app):
@@ -48,4 +47,8 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime,nullable=False,default=datetime.datetime.now)
 
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+
+    def update_table(user):
+        db.session.add(user)
+        db.session.commit()
 
