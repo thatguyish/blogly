@@ -52,3 +52,7 @@ class Post(db.Model):
         db.session.add(user)
         db.session.commit()
 
+    @classmethod
+    def delete_at_id(cls,d_id):
+        cls.query.filter_by(id=d_id).delete()
+        db.session.commit()

@@ -22,9 +22,9 @@
             </div>
             <div class="row">
                 <h1 class="mt-3">Posts</h1>
-                {%if posts%}
+                {%if user.posts%}
                 <ul>
-                {%for post in posts%}
+                {%for post in user.posts%}
                     <li><a href="/posts/{{post.id}}">{{post.title}}</a></li>
                 {%endfor%}
                 </ul>

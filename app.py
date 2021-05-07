@@ -85,3 +85,31 @@ def new_post_page(user_id):
     if request.method=='GET':
         return render_template('new_post.html',user=user)
 
+@app.route('/posts/<post_id>')
+def posts_page(post_id):
+    post = Post.query.get(post_id)
+    return render_template('posts.html',post=post)
+
+@app.route('/posts/<post_id>/edit',methods=['POST','GET'])
+def edit_post_page(post_id):
+    post = Post.query.get_or_404(post_id)
+    user_id = post.user.id
+    if request.method=='POST':
+        try:
+            post.title = empty_to_default(request.form['titleInput'],None)
+            post.content = empty_to_default(request.form['contentInput'],None)
+            return redirect(f'/users/{user_id}')
+        except:
+            db.session.rollback()
+            flash('Invalid Input')
+            return redirect(f'/users/{user_id}/posts/new')
+    if request.method=='GET':
+        return render_template('edit_post.html',post=post)
+
+
+@app.route('/posts/<post_id>/delete',methods=['POST'])
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    user_id = post.user.id
+    Post.delete_at_id(post.id)
+    return redirect(f'/users/{user_id}')

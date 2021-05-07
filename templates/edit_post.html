@@ -12,25 +12,25 @@
     </ul>
     {%endif%}
     {%endwith%}
-    <h1>New Post</h1>
-    <form id="newPostForm" method="POST" action="/users/{{user.id}}/posts/new">
+    <h1>Edit Post</h1>
+    <form id="editPostForm" method="POST" action="/users/{{post.user.id}}/posts/edit">
         <div class="mb-3">
-            <label for="titleInput" class="form-label">Title</label>
-            <input type="text" class="form-control" name="titleInput" id="titleInput">
+            <label for="titleInput" class="form-label">Title:</label>
+            <input type="text" class="form-control" name="titleInput" id="titleInput" value="{{post.title}}">
         </div>
         <div class="mb-3">
-            <label for="contentInput" class="form-label">Content</label>
-            <textarea class="form-control" name="contentInput" id="contentInput"></textarea>
+            <label for="contentInput" class="form-label">Content:</label>
+            <textarea class="form-control text-start" name="contentInput" id="contentInput">{{post.content}}</textarea>
         </div>
     </form>
     <div class="d-flex justify-content-start">
         <div>
-            <form action="/users/{{user.id}}">
+            <form action="/users/{{post.user.id}}">
                 <button class="btn btn-outline-primary" type="submit">Cancel</button>
             </form>
         </div>
         <div class="ms-1">
-            <button type="submit" form="newPostForm" class="btn btn-success">Save</button>
+            <button type="submit" form="editPostForm" class="btn btn-success">Save</button>
         </div>
     </div>
 

@@ -1,0 +1,36 @@
+{%extends 'base.html'%}
+{%block title%}{%endblock%}
+{%block content%}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>{{post.title}}</h1>
+            <div>
+                <p>
+                    {{post.content}}
+                </p>
+                <p>
+                    By {{post.user.first_name}} {{post.user.last_name}}
+                </p>
+            </div>
+            <div class="d-flex">
+                <div class="me-1">
+                    <form action="/users/{{post.user.id}}">
+                        <button class="btn btn-outline-primary" type="submit">Cancel</button>
+                    </form>
+                </div>
+                <div>
+                    <form action="/posts/{{post.id}}/edit" method="GET">
+                        <button class="btn btn-primary">Edit</button>
+                    </form>
+                </div>
+                <div class="ms-1">
+                    <form action="/posts/{{post.id}}/delete" method="post">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
