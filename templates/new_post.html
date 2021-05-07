@@ -1,0 +1,39 @@
+{%extends 'base.html'%}
+{%block title%}New Post{%endblock%}
+{%block content%}
+
+<div class="container">
+    {%with emessages = get_flashed_messages()%}
+    {%if emessages%}
+    <ul>
+    {%for emessage in emessages%}
+        <li style="list-style-type: none;" class="alert alert-danger">{{emessage}}</li>
+    {%endfor%}
+    </ul>
+    {%endif%}
+    {%endwith%}
+    <h1>New Post</h1>
+    <form id="editPostForm" method="POST" action="/users/{{user.id}}/posts/new">
+        <div class="mb-3">
+            <label for="titleInput" class="form-label">Title</label>
+            <input type="text" class="form-control" name="titleInput" id="titleInput">
+        </div>
+        <div class="mb-3">
+            <label for="contentInput" class="form-label">Content</label>
+            <textarea class="form-control" name="contentInput" id="contentInput">
+            </textarea>
+        </div>
+    </form>
+    <div class="d-flex justify-content-start">
+        <div>
+            <form action="/users/{{user.id}}">
+                <button class="btn btn-outline-primary" type="submit">Cancel</button>
+            </form>
+        </div>
+        <div class="ms-1">
+            <button type="submit" form="editPostForm" class="btn btn-success">Save</button>
+        </div>
+    </div>
+
+</div>
+{%endblock%}
