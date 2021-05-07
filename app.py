@@ -22,7 +22,7 @@ def home_page():
 @app.route('/users')
 def users_page():
     all_users = User.query.all()
-
+    print(all_users[0].first_name)
     return render_template('users.html',all_users=all_users)
 
 @app.route('/users/new',methods=['POST','GET'])
