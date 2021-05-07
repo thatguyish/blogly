@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 
+from sqlalchemy.orm import backref
 db = SQLAlchemy()
 
 def connect_db(app):
@@ -8,7 +10,7 @@ def connect_db(app):
 
 class User(db.Model):
     def __repr__(self):
-        return "self.user"
+        return f"{self.first_name}"
 
     __tablename__ = "users"
 
@@ -28,3 +30,22 @@ class User(db.Model):
     def delete_at_id(cls,d_id):
         cls.query.filter_by(id=d_id).delete()
         db.session.commit()
+
+    posts = db.relationship('Post', backref='user')
+
+class Post(db.Model):
+    def __repr__(self):
+        return f"{self.title}"
+
+    __tablename__ = 'posts'
+
+    id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+
+    title = db.Column(db.String(30),nullable=False)
+
+    content = db.Column(db.Text,nullable=False)
+
+    created_at = db.Column(db.DateTime,nullable=False,default=datetime.datetime.now)
+
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+
