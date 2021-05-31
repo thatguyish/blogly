@@ -9,7 +9,7 @@ def connect_db(app):
 
 class User(db.Model):
     def __repr__(self):
-        return f"{self.first_name}"
+        return self.first_name
 
     __tablename__ = "users"
 
@@ -34,7 +34,7 @@ class User(db.Model):
 
 class Post(db.Model):
     def __repr__(self):
-        return f"{self.title}"
+        return self.title
 
     __tablename__ = 'posts'
 
@@ -65,6 +65,9 @@ class PostTag(db.Model):
     tag_id = db.Column(db.Integer,db.ForeignKey('tags.id'),primary_key=True,nullable =False)
 
 class Tag(db.Model):
+    def __repr__(self):
+        return self.name
+
     __tablename__='tags'
 
     id = db.Column(db.Integer,primary_key=True,autoincrement=True)
@@ -72,3 +75,4 @@ class Tag(db.Model):
     name = db.Column(db.String(50),unique=True)
 
     posts = db.relationship('Post',secondary="posttag",backref=('tags'))
+

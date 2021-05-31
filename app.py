@@ -1,5 +1,5 @@
 from flask import Flask,render_template,redirect,request,flash
-from models import Post, connect_db,User,db
+from models import Post, connect_db,User,db,Tag
 from flask_debugtoolbar import DebugToolbarExtension
 from res.Tools import empty_to_default
 
@@ -106,10 +106,16 @@ def edit_post_page(post_id):
     if request.method=='GET':
         return render_template('edit_post.html',post=post)
 
-
 @app.route('/posts/<post_id>/delete',methods=['POST'])
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
     user_id = post.user.id
     Post.delete_at_id(post.id)
     return redirect(f'/users/{user_id}')
+
+@app.route('/tags')
+def tags_view():
+    """list links for tags"""
+    #search database for tags and display in a list#
+    all_tags = Tag.query.all()
+    return render_template('tags.html',all_tags=all_tags)
