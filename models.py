@@ -56,3 +56,19 @@ class Post(db.Model):
     def delete_at_id(cls,d_id):
         cls.query.filter_by(id=d_id).delete()
         db.session.commit()
+
+class PostTag(db.Model):
+    __tablename__ = "posttag"
+
+    post_id = db.Column(db.Integer,db.ForeignKey('posts.id'),primary_key=True,nullable=False)
+    
+    tag_id = db.Column(db.Integer,db.ForeignKey('tags.id'),primary_key=True,nullable =False)
+
+class Tag(db.Model):
+    __tablename__='tags'
+
+    id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+
+    name = db.Column(db.String(50),unique=True)
+
+    posts = db.relationship('Post',secondary="posttag",backref=('tags'))
