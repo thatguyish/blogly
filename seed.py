@@ -11,6 +11,7 @@ post_list = [Post(title="first post",content="This is my first post",user_id=1),
 tags = [Tag(name="funny"),Tag(name='crazy'),Tag(name='insane')]
 
 posttags = [PostTag(post_id=1,tag_id =1),PostTag(post_id=1,tag_id=2),PostTag(post_id=2,tag_id=1)]
+
 db.session.add_all(user_list)
 db.session.add_all(post_list)
 db.session.add_all(tags)

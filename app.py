@@ -19,6 +19,8 @@ connect_db(app)
 def home_page():
     return redirect('/users')
 
+#USERS
+
 @app.route('/users')
 def users_page():
     all_users = User.query.all()
@@ -85,6 +87,8 @@ def new_post_page(user_id):
     if request.method=='GET':
         return render_template('new_post.html',user=user)
 
+#POSTS
+
 @app.route('/posts/<post_id>')
 def posts_page(post_id):
     post = Post.query.get(post_id)
@@ -94,17 +98,29 @@ def posts_page(post_id):
 def edit_post_page(post_id):
     post = Post.query.get_or_404(post_id)
     user_id = post.user.id
+    all_tags = Tag.query.all()
     if request.method=='POST':
+        for tag in all_tags:
+            if request.form.get(f'tag-{tag.name}'):
+                if tag not in post.tags:
+                    post.tags.append(tag)
+                    db.session.add(post)
+                    db.session.commit()
+            else:
+                if tag in post.tags:
+                    post.tags.remove(tag)
         try:
             post.title = empty_to_default(request.form['titleInput'],None)
             post.content = empty_to_default(request.form['contentInput'],None)
+            db.session.add(post)
+            db.session.commit()
             return redirect(f'/users/{user_id}')
         except:
             db.session.rollback()
             flash('Invalid Input')
             return redirect(f'/users/{user_id}/posts/new')
     if request.method=='GET':
-        return render_template('edit_post.html',post=post)
+        return render_template('edit_post.html',post=post,all_tags=all_tags)
 
 @app.route('/posts/<post_id>/delete',methods=['POST'])
 def delete_post(post_id):
@@ -113,9 +129,59 @@ def delete_post(post_id):
     Post.delete_at_id(post.id)
     return redirect(f'/users/{user_id}')
 
+#TAGS
+
 @app.route('/tags')
 def tags_view():
     """list links for tags"""
     #search database for tags and display in a list#
     all_tags = Tag.query.all()
     return render_template('tags.html',all_tags=all_tags)
+    
+@app.route('/tags/<tag_id>')
+def tag_detail_view(tag_id):
+    """Show tag details"""
+    #search database for tags and display in a list#
+    tag = Tag.query.get(tag_id)
+    
+    return render_template('tag_details.html',tag=tag)
+
+@app.route('/tags/new',methods=['GET','POST'])
+def tags_new_view():
+    """Shows and processes tag form"""
+    #search database for tags and display in a list#
+    if request.method=='POST':
+        posted_tag = request.form['name_input']
+        if Tag.query.filter_by(name=posted_tag).all():
+            flash('Already Added')
+        else:
+            db.session.add(Tag(name=posted_tag))
+            db.session.commit()
+            print('should be added', posted_tag)
+        return redirect('/tags')
+    else:
+        return render_template('new_tag.html')
+
+@app.route('/tags/<tag_id>/edit',methods=['GET','POST'])
+def edit_tag_view(tag_id):
+    """Shows edit tag form"""
+    #search database and edit tag#
+    if request.method == 'POST':
+        editing_tag = Tag.query.get(tag_id)
+        editing_tag.name = request.form['name_input']
+        db.session.add(editing_tag)
+        db.session.commit()
+        return redirect('/tags')
+    else: 
+        tag = Tag.query.get(tag_id)
+        return render_template('edit_tag.html',tag=tag)
+
+@app.route('/tags/<tag_id>/delete',methods=['POST'])
+def delete_tag_view(tag_id):
+    """Deletes tag"""
+    #search database for tags and display in a list#
+    cur_tag = Tag.query.get(tag_id)
+    db.session.delete(cur_tag)
+    db.session.commit()
+    return redirect('/tags')
+

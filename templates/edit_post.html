@@ -6,14 +6,14 @@
     {%with emessages = get_flashed_messages()%}
     {%if emessages%}
     <ul>
-    {%for emessage in emessages%}
+        {%for emessage in emessages%}
         <li style="list-style-type: none;" class="alert alert-danger">{{emessage}}</li>
-    {%endfor%}
+        {%endfor%}
     </ul>
     {%endif%}
     {%endwith%}
     <h1>Edit Post</h1>
-    <form id="editPostForm" method="POST" action="/users/{{post.user.id}}/posts/edit">
+    <form id="editPostForm" method="POST" action="/posts/{{post.id}}/edit">
         <div class="mb-3">
             <label for="titleInput" class="form-label">Title:</label>
             <input type="text" class="form-control" name="titleInput" id="titleInput" value="{{post.title}}">
@@ -22,6 +22,14 @@
             <label for="contentInput" class="form-label">Content:</label>
             <textarea class="form-control text-start" name="contentInput" id="contentInput">{{post.content}}</textarea>
         </div>
+
+        {%for tag in all_tags%}
+        <div class="tags">
+            <ul>
+                <li><input type="checkbox" name="tag-{{tag.name}}" id="tag-{{tag.name}}" {%if tag in post.tags%} checked {%endif%}> {{tag.name.capitalize()}}</li>
+            </ul>
+        </div>
+        {%endfor%}
     </form>
     <div class="d-flex justify-content-start">
         <div>
