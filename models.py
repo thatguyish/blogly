@@ -74,5 +74,5 @@ class Tag(db.Model):
 
     name = db.Column(db.String(50),unique=True)
 
-    posts = db.relationship('Post',secondary="posttag",backref=('tags'))
+    posts = db.relationship('Post',secondary='posttag',backref='tags')
 

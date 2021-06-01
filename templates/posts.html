@@ -13,7 +13,22 @@
                     By {{post.user.first_name}} {{post.user.last_name}}
                 </p>
             </div>
+            
+            {%if post.tags%}
             <div class="d-flex">
+            <h4>Tags:</h4>
+            {%for tag in post.tags%}
+            
+            <div class="ms-1">
+                <form action="/posts/{{post.id}}/delete" method="post">
+                    <button class="btn btn-primary btn-sm fw-bolder">{{tag.name}}</button>
+                </form>
+            </div>
+
+            {%endfor%}
+            </div>
+            {%endif%}
+            <div class="d-flex mt-1">
                 <div class="me-1">
                     <form action="/users/{{post.user.id}}">
                         <button class="btn btn-outline-primary" type="submit">Cancel</button>
